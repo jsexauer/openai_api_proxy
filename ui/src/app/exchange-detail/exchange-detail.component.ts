@@ -19,8 +19,8 @@ export class ExchangeDetailComponent implements OnInit, OnDestroy {
     showResHeaders = false;
     showReqMessages = true;
     showReqTools = true;
-    showReqBody = true;
-    showResBody = true;
+    showReqBody = false;
+    showResBody = false;
 
     private routeSub?: Subscription;
     private exchangeSub?: Subscription;

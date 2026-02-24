@@ -76,7 +76,7 @@
 
             <!-- Available Tools -->
             <ng-container *ngIf="getAvailableTools(exchange.requestBody) as tools">
-                <div class="sub-section tool-section collapsible" *ngIf="tools.length > 0">
+                <div class="sub-section collapsible" *ngIf="tools.length > 0">
                     <div class="sub-title clickable" (click)="toggleReqTools()">
                         <span>🔧 Available Tools ({{ tools.length }})</span>
                         <span class="toggle-icon">{{ showReqTools ? '▲' : '▼' }}</span>

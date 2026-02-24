@@ -115,10 +115,18 @@ export class ExchangeDetailComponent implements OnInit, OnDestroy {
         return this.getResponseContent(body).length > 0;
     }
 
-    getMessages(body: any): { role: string; content: string }[] {
+    getMessages(body: any): { role: string; content: any }[] {
         if (!body) return [];
         const messages = body?.messages ?? [];
         return messages.filter((m: any) => m.role && m.content);
+    }
+
+    isString(val: any): boolean {
+        return typeof val === 'string';
+    }
+
+    isArray(val: any): boolean {
+        return Array.isArray(val);
     }
 
     getAvailableTools(body: any): any[] {

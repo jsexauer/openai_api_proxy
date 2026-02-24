@@ -45,7 +45,30 @@
                     <div class="messages-list" *ngIf="showReqMessages">
                         <div *ngFor="let msg of messages" class="message-card" [ngClass]="'role-' + msg.role">
                             <div class="msg-role">{{ msg.role }}</div>
-                            <div class="msg-content">{{ msg.content }}</div>
+                            <div class="msg-content">
+                                <ng-container *ngIf="isString(msg.content); else objContent">
+                                    {{ msg.content }}
+                                </ng-container>
+                                <ng-template #objContent>
+                                    <ng-container *ngIf="isArray(msg.content); else treeView">
+                                        <div class="msg-part" *ngFor="let part of msg.content">
+                                            <ng-container *ngIf="part.type === 'text'">
+                                                <div class="msg-text">{{ part.text }}</div>
+                                            </ng-container>
+                                            <ng-container *ngIf="part.type === 'image_url'">
+                                                <img class="msg-image" [src]="part.image_url?.url"
+                                                    alt="Image Content" />
+                                            </ng-container>
+                                            <ng-container *ngIf="part.type !== 'text' && part.type !== 'image_url'">
+                                                <app-json-tree [data]="part"></app-json-tree>
+                                            </ng-container>
+                                        </div>
+                                    </ng-container>
+                                    <ng-template #treeView>
+                                        <app-json-tree [data]="msg.content"></app-json-tree>
+                                    </ng-template>
+                                </ng-template>
+                            </div>
                         </div>
                     </div>
                 </div>

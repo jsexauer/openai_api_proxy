@@ -113,6 +113,24 @@ export class ExchangeDetailComponent implements OnInit, OnDestroy {
         return messages.filter((m: any) => m.role && m.content);
     }
 
+    getAvailableTools(body: any): any[] {
+        if (!body) return [];
+        return body?.tools ?? [];
+    }
+
+    expandedTools = new Set<number>();
+    toggleTool(index: number): void {
+        if (this.expandedTools.has(index)) {
+            this.expandedTools.delete(index);
+        } else {
+            this.expandedTools.add(index);
+        }
+    }
+
+    isToolExpanded(index: number): boolean {
+        return this.expandedTools.has(index);
+    }
+
     toggleReqHeaders(): void { this.showReqHeaders = !this.showReqHeaders; }
     toggleResHeaders(): void { this.showResHeaders = !this.showResHeaders; }
 }

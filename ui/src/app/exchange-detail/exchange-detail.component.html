@@ -48,6 +48,30 @@
                 </div>
             </ng-container>
 
+            <!-- Available Tools -->
+            <ng-container *ngIf="getAvailableTools(exchange.requestBody) as tools">
+                <div class="sub-section tool-section" *ngIf="tools.length > 0">
+                    <div class="sub-title">🔧 Available Tools ({{ tools.length }})</div>
+                    <div class="tool-cards">
+                        <div class="tool-card" *ngFor="let tool of tools; let i = index">
+                            <div class="tool-header clickable" (click)="toggleTool(i)">
+                                <span class="tool-index">#{{ i + 1 }}</span>
+                                <span class="tool-name">{{ tool.function?.name ?? 'unknown' }}</span>
+                                <span class="tool-type" *ngIf="tool.type">{{ tool.type }}</span>
+                                <span class="toggle-icon" style="margin-left: auto;">{{ isToolExpanded(i) ? '▲' : '▼'
+                                    }}</span>
+                            </div>
+                            <div class="tool-details" *ngIf="isToolExpanded(i)">
+                                <div class="tool-desc" *ngIf="tool.function?.description">{{ tool.function.description
+                                    }}</div>
+                                <app-json-tree *ngIf="tool.function?.parameters"
+                                    [data]="tool.function.parameters"></app-json-tree>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
             <!-- Request Body -->
             <div class="sub-section">
                 <div class="sub-title">

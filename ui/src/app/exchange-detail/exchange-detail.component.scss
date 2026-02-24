@@ -404,6 +404,18 @@
     max-height: 200px;
 }
 
+.tool-details {
+    padding: 12px;
+    border-top: 1px solid rgba(251, 191, 36, 0.15);
+}
+
+.tool-desc {
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
 /* Empty state */
 .empty-detail {
     display: flex;

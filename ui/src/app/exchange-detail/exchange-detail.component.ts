@@ -4,11 +4,12 @@ import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { ExchangeService } from '../services/exchange.service';
 import { Exchange } from '../models/exchange.model';
+import { JsonTreeComponent } from '../components/json-tree/json-tree.component';
 
 @Component({
     selector: 'app-exchange-detail',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, JsonTreeComponent],
     templateUrl: './exchange-detail.component.html',
     styleUrls: ['./exchange-detail.component.scss'],
 })

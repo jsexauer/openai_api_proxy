@@ -37,9 +37,12 @@
 
             <!-- Request Messages (chat) -->
             <ng-container *ngIf="getMessages(exchange.requestBody) as messages">
-                <div class="sub-section" *ngIf="messages.length > 0">
-                    <div class="sub-title">Messages</div>
-                    <div class="messages-list">
+                <div class="sub-section collapsible" *ngIf="messages.length > 0">
+                    <div class="sub-title clickable" (click)="toggleReqMessages()">
+                        <span>Messages</span>
+                        <span class="toggle-icon">{{ showReqMessages ? '▲' : '▼' }}</span>
+                    </div>
+                    <div class="messages-list" *ngIf="showReqMessages">
                         <div *ngFor="let msg of messages" class="message-card" [ngClass]="'role-' + msg.role">
                             <div class="msg-role">{{ msg.role }}</div>
                             <div class="msg-content">{{ msg.content }}</div>
@@ -50,9 +53,12 @@
 
             <!-- Available Tools -->
             <ng-container *ngIf="getAvailableTools(exchange.requestBody) as tools">
-                <div class="sub-section tool-section" *ngIf="tools.length > 0">
-                    <div class="sub-title">🔧 Available Tools ({{ tools.length }})</div>
-                    <div class="tool-cards">
+                <div class="sub-section tool-section collapsible" *ngIf="tools.length > 0">
+                    <div class="sub-title clickable" (click)="toggleReqTools()">
+                        <span>🔧 Available Tools ({{ tools.length }})</span>
+                        <span class="toggle-icon">{{ showReqTools ? '▲' : '▼' }}</span>
+                    </div>
+                    <div class="tool-cards" *ngIf="showReqTools">
                         <div class="tool-card" *ngFor="let tool of tools; let i = index">
                             <div class="tool-header clickable" (click)="toggleTool(i)">
                                 <span class="tool-index">#{{ i + 1 }}</span>
@@ -73,18 +79,21 @@
             </ng-container>
 
             <!-- Request Body -->
-            <div class="sub-section">
-                <div class="sub-title">
-                    Body
-                    <span class="model-chip" *ngIf="exchange.requestBody?.model">
-                        model: {{ exchange.requestBody.model }}
+            <div class="sub-section collapsible">
+                <div class="sub-title clickable" (click)="toggleReqBody()">
+                    <span style="display: flex; align-items: center; gap: 8px;">
+                        <span>Body</span>
+                        <span class="model-chip" *ngIf="exchange.requestBody?.model">
+                            model: {{ exchange.requestBody.model }}
+                        </span>
+                        <span class="temp-chip" *ngIf="exchange.requestBody?.temperature !== undefined">
+                            temp: {{ exchange.requestBody.temperature }}
+                        </span>
                     </span>
-                    <span class="temp-chip" *ngIf="exchange.requestBody?.temperature !== undefined">
-                        temp: {{ exchange.requestBody.temperature }}
-                    </span>
+                    <span class="toggle-icon">{{ showReqBody ? '▲' : '▼' }}</span>
                 </div>
                 <!-- Replaced raw <pre> block with recursive <app-json-tree> -->
-                <app-json-tree [data]="exchange.requestBody"></app-json-tree>
+                <app-json-tree *ngIf="showReqBody" [data]="exchange.requestBody"></app-json-tree>
             </div>
 
             <!-- Request Headers -->
@@ -126,10 +135,13 @@
             </div>
 
             <!-- Response Body (raw JSON) -->
-            <div class="sub-section">
-                <div class="sub-title">Body</div>
+            <div class="sub-section collapsible">
+                <div class="sub-title clickable" (click)="toggleResBody()">
+                    <span>Body</span>
+                    <span class="toggle-icon">{{ showResBody ? '▲' : '▼' }}</span>
+                </div>
                 <!-- Replaced raw <pre> block with recursive <app-json-tree> -->
-                <app-json-tree [data]="exchange.responseBody"></app-json-tree>
+                <app-json-tree *ngIf="showResBody" [data]="exchange.responseBody"></app-json-tree>
             </div>
 
             <!-- Response Headers -->

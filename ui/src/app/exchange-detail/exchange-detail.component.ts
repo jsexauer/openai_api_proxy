@@ -17,6 +17,10 @@ export class ExchangeDetailComponent implements OnInit, OnDestroy {
     exchange: Exchange | null = null;
     showReqHeaders = false;
     showResHeaders = false;
+    showReqMessages = true;
+    showReqTools = true;
+    showReqBody = true;
+    showResBody = true;
 
     private routeSub?: Subscription;
     private exchangeSub?: Subscription;
@@ -54,6 +58,10 @@ export class ExchangeDetailComponent implements OnInit, OnDestroy {
         this.exchange = ex ?? null;
         this.showReqHeaders = false;
         this.showResHeaders = false;
+        this.showReqMessages = true;
+        this.showReqTools = true;
+        this.showReqBody = true;
+        this.showResBody = true;
     }
 
     ngOnDestroy(): void {
@@ -131,6 +139,10 @@ export class ExchangeDetailComponent implements OnInit, OnDestroy {
         return this.expandedTools.has(index);
     }
 
+    toggleReqMessages(): void { this.showReqMessages = !this.showReqMessages; }
+    toggleReqTools(): void { this.showReqTools = !this.showReqTools; }
+    toggleReqBody(): void { this.showReqBody = !this.showReqBody; }
+    toggleResBody(): void { this.showResBody = !this.showResBody; }
     toggleReqHeaders(): void { this.showReqHeaders = !this.showReqHeaders; }
     toggleResHeaders(): void { this.showResHeaders = !this.showResHeaders; }
 }

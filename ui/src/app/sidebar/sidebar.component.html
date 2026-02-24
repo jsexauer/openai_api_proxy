@@ -1,0 +1,47 @@
+<div class="sidebar">
+  <div class="sidebar-header">
+    <div class="logo">
+      <span class="logo-icon">⬡</span>
+      <span class="logo-text">API Proxy</span>
+    </div>
+    <button class="export-btn" (click)="exportMarkdown()" title="Export session as Markdown">
+      <span class="export-icon">↓</span> Export .md
+    </button>
+  </div>
+
+  <div class="sidebar-body">
+    <div class="section-label">Exchanges</div>
+
+    <ng-container *ngIf="exchanges$ | async as exchanges">
+      <div class="empty-state" *ngIf="exchanges.length === 0">
+        <p>No requests yet.</p>
+        <p class="hint">Point your API client at port 8077 to start capturing.</p>
+      </div>
+
+      <div
+        *ngFor="let ex of exchanges | reverseArray; trackBy: trackById"
+        class="exchange-item"
+        [routerLink]="['/exchange', ex.id]"
+        routerLinkActive="active"
+      >
+        <div class="item-top">
+          <span class="method" [ngClass]="getMethodClass(ex.method)">{{ ex.method }}</span>
+          <span class="status-badge" [ngClass]="getStatusClass(ex.responseStatus)">
+            {{ ex.responseStatus ?? '...' }}
+          </span>
+        </div>
+        <div class="item-path" [title]="ex.path">{{ shortPath(ex.path) }}</div>
+        <div class="item-meta">
+          <span class="timestamp">{{ formatTime(ex.timestamp) }}</span>
+          <span class="duration" *ngIf="ex.duration !== null">{{ ex.duration }}ms</span>
+        </div>
+        <div class="tool-badge" *ngIf="ex.toolCalls && ex.toolCalls.length > 0">
+          🔧 {{ ex.toolCalls.length }} tool{{ ex.toolCalls.length > 1 ? 's' : '' }}
+        </div>
+        <div class="stream-badge" *ngIf="ex.isStream">
+          <span>⚡ stream</span>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

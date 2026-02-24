@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+ui/node_modules/
+
+# Angular build output
+ui/dist/
+ui/.angular/
+
+# npm
+package-lock.json
+ui/package-lock.json
+
+# Environment & secrets
+.env
+*.env.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/settings.json
+.idea/
+
+# Misc
+*.tgz

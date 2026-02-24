@@ -1,0 +1,131 @@
+<div class="detail-container" *ngIf="exchange; else emptyState">
+
+    <!-- Header bar -->
+    <div class="detail-header">
+        <div class="header-left">
+            <span class="method-badge method-{{ exchange.method.toLowerCase() }}">{{ exchange.method }}</span>
+            <span class="path-text">{{ exchange.path }}</span>
+        </div>
+        <div class="header-right">
+            <div class="meta-chip">
+                <span class="meta-label">Status</span>
+                <span class="status-badge" [ngClass]="getStatusClass(exchange.responseStatus)">
+                    {{ exchange.responseStatus ?? '…' }}
+                </span>
+            </div>
+            <div class="meta-chip" *ngIf="exchange.duration !== null">
+                <span class="meta-label">Duration</span>
+                <span class="meta-value">{{ exchange.duration }}ms</span>
+            </div>
+            <div class="meta-chip">
+                <span class="meta-label">Time</span>
+                <span class="meta-value">{{ exchange.timestamp | date:'medium' }}</span>
+            </div>
+            <div class="meta-chip" *ngIf="exchange.isStream">
+                <span class="stream-indicator">⚡ Streaming</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="panels">
+
+        <!-- REQUEST PANEL -->
+        <div class="panel">
+            <div class="panel-title">
+                <span class="panel-icon">↑</span> Request
+            </div>
+
+            <!-- Request Messages (chat) -->
+            <ng-container *ngIf="getMessages(exchange.requestBody) as messages">
+                <div class="sub-section" *ngIf="messages.length > 0">
+                    <div class="sub-title">Messages</div>
+                    <div class="messages-list">
+                        <div *ngFor="let msg of messages" class="message-card" [ngClass]="'role-' + msg.role">
+                            <div class="msg-role">{{ msg.role }}</div>
+                            <div class="msg-content">{{ msg.content }}</div>
+                        </div>
+                    </div>
+                </div>
+            </ng-container>
+
+            <!-- Request Body -->
+            <div class="sub-section">
+                <div class="sub-title">
+                    Body
+                    <span class="model-chip" *ngIf="exchange.requestBody?.model">
+                        model: {{ exchange.requestBody.model }}
+                    </span>
+                    <span class="temp-chip" *ngIf="exchange.requestBody?.temperature !== undefined">
+                        temp: {{ exchange.requestBody.temperature }}
+                    </span>
+                </div>
+                <pre class="code-block"><code>{{ formatJson(exchange.requestBody) }}</code></pre>
+            </div>
+
+            <!-- Request Headers -->
+            <div class="sub-section collapsible">
+                <div class="sub-title clickable" (click)="toggleReqHeaders()">
+                    <span>Headers</span>
+                    <span class="toggle-icon">{{ showReqHeaders ? '▲' : '▼' }}</span>
+                </div>
+                <pre class="code-block"
+                    *ngIf="showReqHeaders"><code>{{ formatJson(exchange.requestHeaders) }}</code></pre>
+            </div>
+        </div>
+
+        <!-- RESPONSE PANEL -->
+        <div class="panel">
+            <div class="panel-title">
+                <span class="panel-icon">↓</span> Response
+            </div>
+
+            <!-- Readable content -->
+            <div class="sub-section" *ngIf="hasContent(exchange.responseBody)">
+                <div class="sub-title">Content</div>
+                <div class="content-block">{{ getResponseContent(exchange.responseBody) }}</div>
+            </div>
+
+            <!-- Tool Calls -->
+            <div class="sub-section tool-section" *ngIf="exchange.toolCalls && exchange.toolCalls.length > 0">
+                <div class="sub-title">🔧 Tool Calls ({{ exchange.toolCalls.length }})</div>
+                <div class="tool-cards">
+                    <div class="tool-card" *ngFor="let tc of exchange.toolCalls; let i = index">
+                        <div class="tool-header">
+                            <span class="tool-index">#{{ i + 1 }}</span>
+                            <span class="tool-name">{{ tc.function?.name ?? 'unknown' }}</span>
+                            <span class="tool-type" *ngIf="tc.type">{{ tc.type }}</span>
+                            <span class="tool-id" *ngIf="tc.id">{{ tc.id }}</span>
+                        </div>
+                        <pre class="code-block tool-args"
+                            *ngIf="tc.function?.arguments"><code>{{ formatArgs(tc.function!.arguments) }}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Response Body (raw JSON) -->
+            <div class="sub-section">
+                <div class="sub-title">Body</div>
+                <pre class="code-block response-body"><code>{{ formatJson(exchange.responseBody) }}</code></pre>
+            </div>
+
+            <!-- Response Headers -->
+            <div class="sub-section collapsible">
+                <div class="sub-title clickable" (click)="toggleResHeaders()">
+                    <span>Headers</span>
+                    <span class="toggle-icon">{{ showResHeaders ? '▲' : '▼' }}</span>
+                </div>
+                <pre class="code-block"
+                    *ngIf="showResHeaders"><code>{{ formatJson(exchange.responseHeaders) }}</code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-template #emptyState>
+    <div class="empty-detail">
+        <div class="empty-icon">⬡</div>
+        <h2>OpenAI API Proxy</h2>
+        <p>No exchange selected.</p>
+        <p class="hint">Point your AI tool at <code>http://localhost:8077</code> to start capturing requests.</p>
+    </div>
+</ng-template>

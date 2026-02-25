@@ -2,6 +2,12 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.1.5.
 
+## Running server
+
+```bash
+npm run build; node bin/cli.js --target http://tesla:8080/api
+```
+
 ## Development server
 
 To start a local development server, run:

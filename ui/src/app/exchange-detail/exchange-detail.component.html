@@ -7,6 +7,9 @@
             <span class="path-text">{{ exchange.path }}</span>
         </div>
         <div class="header-right">
+            <button class="export-btn" (click)="exportMarkdown()" title="Export conversation as Markdown">
+                <span class="export-icon">↓</span> Export .md
+            </button>
             <div class="meta-chip">
                 <span class="meta-label">Status</span>
                 <span class="status-badge" [ngClass]="getStatusClass(exchange.responseStatus)">

@@ -2,7 +2,6 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ExchangeService } from '../services/exchange.service';
-import { ExportService } from '../services/export.service';
 import { Exchange } from '../models/exchange.model';
 import { Observable } from 'rxjs';
 import { ReverseArrayPipe } from '../pipes/reverse-array.pipe';
@@ -19,17 +18,11 @@ export class SidebarComponent implements OnInit {
 
     constructor(
         private exchangeService: ExchangeService,
-        private exportService: ExportService,
         private router: Router
     ) { }
 
     ngOnInit(): void {
         this.exchanges$ = this.exchangeService.exchanges$;
-    }
-
-    exportMarkdown(): void {
-        const exchanges = (this.exchangeService as any)['_exchanges'].getValue();
-        this.exportService.exportToMarkdown(exchanges);
     }
 
     navigateTo(id: number): void {

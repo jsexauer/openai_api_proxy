@@ -4,9 +4,6 @@
       <span class="logo-icon">⬡</span>
       <span class="logo-text">API Proxy</span>
     </div>
-    <button class="export-btn" (click)="exportMarkdown()" title="Export session as Markdown">
-      <span class="export-icon">↓</span> Export .md
-    </button>
   </div>
 
   <div class="sidebar-body">
@@ -18,12 +15,8 @@
         <p class="hint">Point your API client at port 8077 to start capturing.</p>
       </div>
 
-      <div
-        *ngFor="let ex of exchanges | reverseArray; trackBy: trackById"
-        class="exchange-item"
-        [routerLink]="['/exchange', ex.id]"
-        routerLinkActive="active"
-      >
+      <div *ngFor="let ex of exchanges | reverseArray; trackBy: trackById" class="exchange-item"
+        [routerLink]="['/exchange', ex.id]" routerLinkActive="active">
         <div class="item-top">
           <span class="method" [ngClass]="getMethodClass(ex.method)">{{ ex.method }}</span>
           <span class="status-badge" [ngClass]="getStatusClass(ex.responseStatus)">

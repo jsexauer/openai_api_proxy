@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { ExchangeService } from '../services/exchange.service';
+import { ExportService } from '../services/export.service';
 import { Exchange } from '../models/exchange.model';
 import { JsonTreeComponent } from '../components/json-tree/json-tree.component';
 
@@ -28,6 +29,7 @@ export class ExchangeDetailComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private exchangeService: ExchangeService,
+        private exportService: ExportService,
         private router: Router
     ) { }
 
@@ -62,6 +64,12 @@ export class ExchangeDetailComponent implements OnInit, OnDestroy {
         this.showReqTools = true;
         this.showReqBody = true;
         this.showResBody = true;
+    }
+
+    exportMarkdown(): void {
+        if (this.exchange) {
+            this.exportService.exportToMarkdown(this.exchange);
+        }
     }
 
     ngOnDestroy(): void {

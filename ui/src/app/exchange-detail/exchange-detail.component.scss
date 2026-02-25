@@ -366,6 +366,42 @@
             color: #34d399;
         }
     }
+
+    &.role-tool {
+        background: rgba(245, 158, 11, 0.08);
+        border: 1px solid rgba(245, 158, 11, 0.2);
+
+        .msg-role {
+            color: #fbbf24;
+        }
+    }
+
+    .tool-call-ref {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        margin-bottom: 8px;
+        padding: 6px 10px;
+        background: rgba(0, 0, 0, 0.2);
+        border: 1px dashed rgba(255, 255, 255, 0.15);
+        border-radius: 6px;
+    }
+
+    .tool-ref-name {
+        font-family: var(--font-mono);
+        color: #fde68a;
+        font-weight: 600;
+        font-size: 11px;
+    }
+
+    .tool-ref-args {
+        font-family: var(--font-mono);
+        color: var(--text-muted);
+        font-size: 11px;
+        white-space: pre-wrap;
+        word-break: break-all;
+        cursor: help;
+    }
 }
 
 /* Tool calls */

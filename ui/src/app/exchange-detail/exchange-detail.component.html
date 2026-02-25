@@ -46,6 +46,15 @@
                         <div *ngFor="let msg of messages" class="message-card" [ngClass]="'role-' + msg.role">
                             <div class="msg-role">{{ msg.role }}</div>
                             <div class="msg-content">
+                                <ng-container
+                                    *ngIf="msg.role === 'tool' && msg.tool_call_id && getToolCallInfo(messages, msg.tool_call_id) as toolInfo">
+                                    <div class="tool-call-ref">
+                                        <span class="tool-ref-name">🔧 {{ toolInfo.function?.name }}</span>
+                                        <span class="tool-ref-args" [title]="toolInfo.function?.arguments">
+                                            {{ truncateArgs(toolInfo.function?.arguments) }}
+                                        </span>
+                                    </div>
+                                </ng-container>
                                 <ng-container *ngIf="isString(msg.content); else objContent">
                                     {{ msg.content }}
                                 </ng-container>

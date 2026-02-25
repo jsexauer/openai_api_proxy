@@ -115,10 +115,10 @@ export class ExchangeDetailComponent implements OnInit, OnDestroy {
         return this.getResponseContent(body).length > 0;
     }
 
-    getMessages(body: any): { role: string; content: any }[] {
+    getMessages(body: any): any[] {
         if (!body) return [];
         const messages = body?.messages ?? [];
-        return messages.filter((m: any) => m.role && m.content);
+        return messages.filter((m: any) => m.role && (m.content !== undefined || m.tool_calls || m.tool_call_id)).reverse();
     }
 
     isString(val: any): boolean {
@@ -132,6 +132,26 @@ export class ExchangeDetailComponent implements OnInit, OnDestroy {
     getAvailableTools(body: any): any[] {
         if (!body) return [];
         return body?.tools ?? [];
+    }
+
+    getToolCallInfo(messages: any[], toolCallId: string): any {
+        if (!messages || !toolCallId) return null;
+        for (const msg of messages) {
+            if (msg.tool_calls && Array.isArray(msg.tool_calls)) {
+                const call = msg.tool_calls.find((tc: any) => tc.id === toolCallId);
+                if (call) return call;
+            }
+        }
+        return null;
+    }
+
+    truncateArgs(args: any, maxLength: number = 100): string {
+        if (!args) return '';
+        let str = typeof args === 'string' ? args : JSON.stringify(args);
+        if (str.length > maxLength) {
+            return str.substring(0, maxLength) + '...';
+        }
+        return str;
     }
 
     expandedTools = new Set<number>();

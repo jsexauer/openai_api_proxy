@@ -49,8 +49,11 @@ function startServer(port) {
 
     // Proxy handler for /v1/*
     app.all('/v1/*', async (req, res) => {
-        //const target = process.env.PROXY_TARGET || 'https://ollama.com/';
-        const target = 'https://ollama.com/';
+        const target = process.env.PROXY_TARGET
+        if (!target) {
+            res.status(500).json({ error: 'PROXY_TARGET not set' });
+            return;
+        }
         const upstreamUrl = `${target}${req.originalUrl}`;
         console.log(`Proxying to: ${upstreamUrl}`);
 
@@ -172,7 +175,7 @@ function startServer(port) {
 
     server.listen(port, () => {
         console.log(`\n  🚀  OpenAI API Proxy running at http://localhost:${port}`);
-        console.log(`  Proxying to: ${process.env.PROXY_TARGET || 'https://ollama.com/'}`);
+        console.log(`  Proxying to: ${process.env.PROXY_TARGET}`);
         console.log(`  Open http://localhost:${port} in your browser to view the UI\n`);
     });
 

@@ -35,6 +35,22 @@
   letter-spacing: 0.5px;
 }
 
+.clear-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.15s;
+
+  &:hover {
+    background: var(--item-hover);
+    color: var(--text-primary);
+  }
+}
+
 .export-btn {
   display: flex;
   align-items: center;
@@ -69,9 +85,11 @@
   &::-webkit-scrollbar {
     width: 4px;
   }
+
   &::-webkit-scrollbar-track {
     background: transparent;
   }
+
   &::-webkit-scrollbar-thumb {
     background: var(--border-color);
     border-radius: 2px;
@@ -138,11 +156,30 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
 
-  &.method-post { background: #1a3a1a; color: #4ade80; }
-  &.method-get  { background: #1a2e3a; color: #60a5fa; }
-  &.method-put  { background: #3a2e1a; color: #fbbf24; }
-  &.method-delete { background: #3a1a1a; color: #f87171; }
-  &.method-patch  { background: #2e1a3a; color: #c084fc; }
+  &.method-post {
+    background: #1a3a1a;
+    color: #4ade80;
+  }
+
+  &.method-get {
+    background: #1a2e3a;
+    color: #60a5fa;
+  }
+
+  &.method-put {
+    background: #3a2e1a;
+    color: #fbbf24;
+  }
+
+  &.method-delete {
+    background: #3a1a1a;
+    color: #f87171;
+  }
+
+  &.method-patch {
+    background: #2e1a3a;
+    color: #c084fc;
+  }
 }
 
 .status-badge {
@@ -152,10 +189,26 @@
   border-radius: 4px;
   margin-left: auto;
 
-  &.status-2xx  { background: #14532d; color: #86efac; }
-  &.status-4xx  { background: #451a03; color: #fdba74; }
-  &.status-5xx  { background: #450a0a; color: #fca5a5; }
-  &.status-unknown, &.status-other { background: #1c1c1c; color: #9ca3af; }
+  &.status-2xx {
+    background: #14532d;
+    color: #86efac;
+  }
+
+  &.status-4xx {
+    background: #451a03;
+    color: #fdba74;
+  }
+
+  &.status-5xx {
+    background: #450a0a;
+    color: #fca5a5;
+  }
+
+  &.status-unknown,
+  &.status-other {
+    background: #1c1c1c;
+    color: #9ca3af;
+  }
 }
 
 .item-path {
@@ -181,13 +234,14 @@
   font-family: var(--font-mono);
 }
 
-.tool-badge, .stream-badge {
+.tool-badge,
+.stream-badge {
   display: inline-flex;
   align-items: center;
   margin-top: 4px;
   font-size: 10px;
   color: var(--text-muted);
-  background: rgba(255,255,255,0.04);
+  background: rgba(255, 255, 255, 0.04);
   padding: 2px 6px;
   border-radius: 4px;
   margin-right: 4px;

@@ -22,6 +22,13 @@ export class ExchangeService {
         });
     }
 
+    clearExchanges(): void {
+        this.http.delete('/api/exchanges').subscribe({
+            next: () => this._exchanges.next([]),
+            error: (err) => console.error('Failed to clear exchanges', err),
+        });
+    }
+
     private connectWebSocket() {
         const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
         const wsUrl = `${proto}//${location.host}`;
@@ -33,6 +40,8 @@ export class ExchangeService {
                 if (msg.type === 'exchange') {
                     const current = this._exchanges.getValue();
                     this._exchanges.next([...current, msg.data]);
+                } else if (msg.type === 'clear') {
+                    this._exchanges.next([]);
                 }
             } catch (e) {
                 console.error('WS parse error', e);

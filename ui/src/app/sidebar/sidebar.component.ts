@@ -29,6 +29,13 @@ export class SidebarComponent implements OnInit {
         this.router.navigate(['/exchange', id]);
     }
 
+    clearHistory(): void {
+        if (confirm('Are you sure you want to clear all requests?')) {
+            this.exchangeService.clearExchanges();
+            this.router.navigate(['/']);
+        }
+    }
+
     getStatusClass(status: number | null): string {
         if (!status) return 'status-unknown';
         if (status >= 200 && status < 300) return 'status-2xx';

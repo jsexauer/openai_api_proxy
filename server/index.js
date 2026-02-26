@@ -160,6 +160,11 @@ function startServer(port) {
     // REST API for stored exchanges
     app.use(bodyParser.json());
     app.get('/api/exchanges', (req, res) => res.json(exchanges));
+    app.delete('/api/exchanges', (req, res) => {
+        exchanges.length = 0;
+        broadcast({ type: 'clear' });
+        res.json({ success: true });
+    });
     app.get('/api/exchanges/:id', (req, res) => {
         const ex = exchanges.find((e) => e.id === parseInt(req.params.id));
         if (!ex) return res.status(404).json({ error: 'Not found' });

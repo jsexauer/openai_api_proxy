@@ -16,6 +16,7 @@ for (let i = 0; i < args.length; i++) {
 target = target.replace(/\/$/, '');
 
 process.env.PROXY_TARGET = target;
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 
 const { startServer } = require('../server/index');
 startServer(8077);

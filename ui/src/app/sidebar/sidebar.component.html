@@ -22,8 +22,11 @@
         [routerLink]="['/exchange', ex.id]" routerLinkActive="active">
         <div class="item-top">
           <span class="method" [ngClass]="getMethodClass(ex.method)">{{ ex.method }}</span>
-          <span class="status-badge" [ngClass]="getStatusClass(ex.responseStatus)">
-            {{ ex.responseStatus ?? '...' }}
+          <span class="status-badge" [ngClass]="getStatusClass(ex)">
+            <ng-container *ngIf="ex.status === 'pending'">Pending</ng-container>
+            <ng-container *ngIf="ex.status !== 'pending'">
+              {{ ex.responseStatus ?? (ex.status === 'error' ? 'Err' : '...') }}
+            </ng-container>
           </span>
         </div>
         <div class="item-path" [title]="ex.path">{{ shortPath(ex.path) }}</div>

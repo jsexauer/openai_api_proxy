@@ -36,7 +36,10 @@ export class SidebarComponent implements OnInit {
         }
     }
 
-    getStatusClass(status: number | null): string {
+    getStatusClass(ex: Exchange): string {
+        if (ex.status === 'pending') return 'status-pending';
+        if (ex.status === 'error') return 'status-error';
+        const status = ex.responseStatus;
         if (!status) return 'status-unknown';
         if (status >= 200 && status < 300) return 'status-2xx';
         if (status >= 400 && status < 500) return 'status-4xx';

@@ -89,7 +89,11 @@ export class ExchangeDetailComponent implements OnInit, OnDestroy {
         try { return JSON.stringify(JSON.parse(args), null, 2); } catch { return args; }
     }
 
-    getStatusClass(status: number | null): string {
+    getStatusClass(ex: Exchange | null): string {
+        if (!ex) return 'status-unknown';
+        if (ex.status === 'pending') return 'status-pending';
+        if (ex.status === 'error') return 'status-error';
+        const status = ex.responseStatus;
         if (!status) return 'status-unknown';
         if (status >= 200 && status < 300) return 'status-2xx';
         if (status >= 400 && status < 500) return 'status-4xx';

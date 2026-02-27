@@ -77,9 +77,13 @@ function startServer(port) {
             toolCalls: [],
             duration: null,
             isStream,
+            status: 'pending' // new status field
         };
 
         const startTime = Date.now();
+
+        // Emit the pending exchange immediately
+        addExchange(exchange);
 
         try {
             const upstreamRes = await fetch(upstreamUrl, {
@@ -121,14 +125,16 @@ function startServer(port) {
                     exchange.responseBodyRaw = fullText;
                     exchange.responseBody = parseSSEBody(fullText);
                     exchange.toolCalls = extractToolCalls(exchange.responseBody);
-                    addExchange(exchange);
+                    exchange.status = 'completed';
+                    updateExchange(exchange);
                 });
 
                 upstreamRes.body.on('error', (err) => {
                     res.end();
                     exchange.duration = Date.now() - startTime;
                     exchange.responseBody = { error: err.message };
-                    addExchange(exchange);
+                    exchange.status = 'error';
+                    updateExchange(exchange);
                 });
             } else {
                 // Non-streaming response
@@ -144,13 +150,15 @@ function startServer(port) {
                     exchange.responseBody = text;
                 }
                 exchange.toolCalls = extractToolCalls(exchange.responseBody);
-                addExchange(exchange);
+                exchange.status = 'completed';
+                updateExchange(exchange);
             }
         } catch (err) {
             exchange.duration = Date.now() - startTime;
             exchange.responseStatus = 502;
             exchange.responseBody = { error: err.message };
-            addExchange(exchange);
+            exchange.status = 'error';
+            updateExchange(exchange);
             if (!res.headersSent) {
                 res.status(502).json({ error: err.message });
             }
@@ -190,6 +198,10 @@ function startServer(port) {
 function addExchange(exchange) {
     exchanges.push(exchange);
     broadcast({ type: 'exchange', data: sanitizeExchange(exchange) });
+}
+
+function updateExchange(exchange) {
+    broadcast({ type: 'update', data: sanitizeExchange(exchange) });
 }
 
 function sanitizeExchange(ex) {

@@ -12,8 +12,11 @@
             </button>
             <div class="meta-chip">
                 <span class="meta-label">Status</span>
-                <span class="status-badge" [ngClass]="getStatusClass(exchange.responseStatus)">
-                    {{ exchange.responseStatus ?? '…' }}
+                <span class="status-badge" [ngClass]="getStatusClass(exchange)">
+                    <ng-container *ngIf="exchange.status === 'pending'">Pending</ng-container>
+                    <ng-container *ngIf="exchange.status !== 'pending'">
+                        {{ exchange.responseStatus ?? (exchange.status === 'error' ? 'Err' : '…') }}
+                    </ng-container>
                 </span>
             </div>
             <div class="meta-chip" *ngIf="exchange.duration !== null">
@@ -147,46 +150,55 @@
                 <span class="panel-icon">↓</span> Response
             </div>
 
-            <!-- Readable content -->
-            <div class="sub-section" *ngIf="hasContent(exchange.responseBody)">
-                <div class="sub-title">Content</div>
-                <div class="content-block">{{ getResponseContent(exchange.responseBody) }}</div>
+            <!-- Pending state -->
+            <div class="pending-state" *ngIf="exchange.status === 'pending'">
+                <div class="spinner"></div>
+                <div class="pending-text">Waiting for response...</div>
             </div>
 
-            <!-- Tool Calls -->
-            <div class="sub-section tool-section" *ngIf="exchange.toolCalls && exchange.toolCalls.length > 0">
-                <div class="sub-title">🔧 Tool Calls ({{ exchange.toolCalls.length }})</div>
-                <div class="tool-cards">
-                    <div class="tool-card" *ngFor="let tc of exchange.toolCalls; let i = index">
-                        <div class="tool-header">
-                            <span class="tool-index">#{{ i + 1 }}</span>
-                            <span class="tool-name">{{ tc.function?.name ?? 'unknown' }}</span>
-                            <span class="tool-type" *ngIf="tc.type">{{ tc.type }}</span>
-                            <span class="tool-id" *ngIf="tc.id">{{ tc.id }}</span>
+            <ng-container *ngIf="exchange.status !== 'pending'">
+                <!-- Readable content -->
+                <div class="sub-section" *ngIf="hasContent(exchange.responseBody)">
+                    <div class="sub-title">Content</div>
+                    <div class="content-block">{{ getResponseContent(exchange.responseBody) }}</div>
+                </div>
+
+                <!-- Tool Calls -->
+                <div class="sub-section tool-section" *ngIf="exchange.toolCalls && exchange.toolCalls.length > 0">
+                    <div class="sub-title">🔧 Tool Calls ({{ exchange.toolCalls.length }})</div>
+                    <div class="tool-cards">
+                        <div class="tool-card" *ngFor="let tc of exchange.toolCalls; let i = index">
+                            <div class="tool-header">
+                                <span class="tool-index">#{{ i + 1 }}</span>
+                                <span class="tool-name">{{ tc.function?.name ?? 'unknown' }}</span>
+                                <span class="tool-type" *ngIf="tc.type">{{ tc.type }}</span>
+                                <span class="tool-id" *ngIf="tc.id">{{ tc.id }}</span>
+                            </div>
+                            <app-json-tree *ngIf="tc.function?.arguments"
+                                [data]="tc.function!.arguments"></app-json-tree>
                         </div>
-                        <app-json-tree *ngIf="tc.function?.arguments" [data]="tc.function!.arguments"></app-json-tree>
                     </div>
                 </div>
-            </div>
 
-            <!-- Response Body (raw JSON) -->
-            <div class="sub-section collapsible">
-                <div class="sub-title clickable" (click)="toggleResBody()">
-                    <span>Body</span>
-                    <span class="toggle-icon">{{ showResBody ? '▲' : '▼' }}</span>
+                <!-- Response Body (raw JSON) -->
+                <div class="sub-section collapsible">
+                    <div class="sub-title clickable" (click)="toggleResBody()">
+                        <span>Body</span>
+                        <span class="toggle-icon">{{ showResBody ? '▲' : '▼' }}</span>
+                    </div>
+                    <!-- Replaced raw <pre> block with recursive <app-json-tree> -->
+                    <app-json-tree *ngIf="showResBody" [data]="exchange.responseBody"></app-json-tree>
                 </div>
-                <!-- Replaced raw <pre> block with recursive <app-json-tree> -->
-                <app-json-tree *ngIf="showResBody" [data]="exchange.responseBody"></app-json-tree>
-            </div>
 
-            <!-- Response Headers -->
-            <div class="sub-section collapsible">
-                <div class="sub-title clickable" (click)="toggleResHeaders()">
-                    <span>Headers</span>
-                    <span class="toggle-icon">{{ showResHeaders ? '▲' : '▼' }}</span>
+                <!-- Response Headers -->
+                <div class="sub-section collapsible">
+                    <div class="sub-title clickable" (click)="toggleResHeaders()">
+                        <span>Headers</span>
+                        <span class="toggle-icon">{{ showResHeaders ? '▲' : '▼' }}</span>
+                    </div>
+                    <app-json-tree *ngIf="showResHeaders" [data]="exchange.responseHeaders"></app-json-tree>
                 </div>
-                <app-json-tree *ngIf="showResHeaders" [data]="exchange.responseHeaders"></app-json-tree>
-            </div>
+            </ng-container>
         </div>
     </div>
 </div>

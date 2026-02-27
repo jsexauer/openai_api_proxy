@@ -40,6 +40,14 @@ export class ExchangeService {
                 if (msg.type === 'exchange') {
                     const current = this._exchanges.getValue();
                     this._exchanges.next([...current, msg.data]);
+                } else if (msg.type === 'update') {
+                    const current = this._exchanges.getValue();
+                    const index = current.findIndex(e => e.id === msg.data.id);
+                    if (index !== -1) {
+                        const updated = [...current];
+                        updated[index] = msg.data;
+                        this._exchanges.next(updated);
+                    }
                 } else if (msg.type === 'clear') {
                     this._exchanges.next([]);
                 }

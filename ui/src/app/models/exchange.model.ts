@@ -11,6 +11,7 @@ export interface Exchange {
     toolCalls: ToolCall[];
     duration: number | null;
     isStream: boolean;
+    status?: 'pending' | 'completed' | 'error';
 }
 
 export interface ToolCall {
